@@ -2,9 +2,9 @@ package com.mapreduce.ajay;
 
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -26,8 +26,15 @@ public class RecordCount extends Configured implements Tool {
 		
 		Job job = Job.getInstance(getConf());
 		
-		job.setMapperClass(Mapper.class);
-		job.setReducerClass(Reducer.class);
+		job.setMapperClass(RecordMapper.class);
+/*		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(LongWritable.class);*/
+		
+		job.setReducerClass(RecordReducer.class);
+		job.setOutputKeyClass(Text.class);
+		job.setOutputValueClass(LongWritable.class);
+		
+		job.setNumReduceTasks(1);
 		
 		job.setInputFormatClass(TextInputFormat.class);
 		job.setOutputFormatClass(TextOutputFormat.class);
